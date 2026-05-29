@@ -1,0 +1,30 @@
+# OpenTofu / Terraform
+*.tfstate
+*.tfstate.*
+*.tflock
+.terraform/
+.terraform.lock.hcl
+*.tfvars
+*.tfvars.json
+
+# Credentials and local config
+.env
+.env.*
+kubeconfig
+*.pem
+*.key
+.aws/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Node (OpenSpec tooling)
+node_modules/
+
+# Build artifacts
+dist/
+build/
+*.log

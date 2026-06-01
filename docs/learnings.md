@@ -49,6 +49,12 @@ feedback loop: a lesson here should change the next milestone's behavior.
   treat the first green CI run as part of acceptance, and pin to tags copied from the
   upstream releases page (`gh api repos/<owner>/<repo>/tags`), not from memory.
 
+- **Proved the Trivy gate both directions on the PR.** A throwaway IaC fixture (open
+  security group) made the gate fail (AVD-AWS-0089 CRITICAL + AVD-AWS-0107 HIGH); allow-
+  listing BOTH IDs in `.trivyignore` flipped it green; removing the fixture + entries
+  restored a clean pass. Nuance: a single bad resource can trip multiple AVD checks — the
+  allow-list must cover every finding ID, not just the first one seen in the log.
+
 ### To fold into the process
 - Adopted this learnings log; recording it at Ship is now part of "How we work".
 - Keep the harness pattern (`just test` + a CI workflow) for every milestone, extending the

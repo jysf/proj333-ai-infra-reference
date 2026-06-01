@@ -8,6 +8,4 @@
 # justification in docs/architecture.md under the section
 # "Trivy high-severity allow-list".
 #
-# --- TEMPORARY (M0 verification): proves allow-list suppression. Removed at merge. ---
-AVD-AWS-0089
-AVD-AWS-0107
+# This file is currently empty — no checks are suppressed.

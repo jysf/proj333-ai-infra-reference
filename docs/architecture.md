@@ -30,6 +30,7 @@ The CI Trivy gate fails the build on any HIGH or CRITICAL finding except those e
 
 | Finding ID | Reason | Added |
 |---|---|---|
-| AVD-AWS-0089 | TEMPORARY M0 verification fixture (open SG ingress) — proves allow-list suppression; removed at M0 merge | M0 |
+| AVD-AWS-0089 | TEMPORARY M0 verification fixture — proves allow-list suppression; removed at M0 merge | M0 |
+| AVD-AWS-0107 | TEMPORARY M0 verification fixture (open SG ingress) — proves allow-list suppression; removed at M0 merge | M0 |
 
 To add an entry: (1) add the Trivy check ID to `.trivyignore` at repo root, and (2) add a corresponding row to the table above with a brief justification and the milestone in which it was added. Both changes must land in the same commit.

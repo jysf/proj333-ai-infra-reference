@@ -1,0 +1,46 @@
+# Security gate: scans IaC/config on every pull request.
+# HIGH/CRITICAL allow-list is enforced via .trivyignore; any entries must be
+# documented with justification in docs/architecture.md under
+# "Trivy high-severity allow-list".
+
+name: security
+
+on:
+  pull_request:
+
+jobs:
+  trivy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: IaC and config scan
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: 'config'
+          scan-ref: '.'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '1'
+          trivyignores: '.trivyignore'
+          hide-progress: true
+
+      - name: Detect Dockerfiles
+        id: detect
+        run: |
+          if ls **/Dockerfile Dockerfile 2>/dev/null | grep -q .; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # TODO: replace 'your-image:tag' with the actual image reference once a
+      # container image exists in this repository.
+      - name: Container image scan
+        if: steps.detect.outputs.present == 'true'
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: 'image'
+          image-ref: 'your-image:tag'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '1'

@@ -1,0 +1,23 @@
+name: ci
+
+on:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install just
+        uses: taiki-e/install-action@v2
+        with:
+          tool: just
+
+      - name: Install pyyaml
+        run: pip install pyyaml
+
+      - name: Run M0 acceptance harness
+        run: sh scripts/verify-m0.sh

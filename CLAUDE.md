@@ -24,15 +24,18 @@ to a seed-stage AI founder, not only to an SRE.
   when its scenarios pass against real output (kubectl / curl / Argo UI / Grafana),
   never on assertion alone.
 - One PR-sized commit per milestone; update README and docs inside the same change.
+- At Ship, record what was learned in `docs/learnings.md` (environment gotchas, decisions
+  and rationale, process improvements) so each milestone feeds back into how we work.
 
 ## Safety and cost (stated as preferences)
 - Prefer proposing a plan (plan mode) before any `tofu apply`, `formae` apply, or
   `kubectl` mutation.
 - Always set a teardown TTL on any provisioned cluster; default 4 hours.
 - Prefer the CPU / small-model path unless `gpu=true` is explicitly set.
-- Keep projected monthly cost under $[SET_CEILING]; flag any change that would exceed it.
-- Never hardcode secrets; source them from [SECRET_STORE]. Never commit credentials,
-  kubeconfigs, or `.tfstate`.
+- Keep projected monthly cost under $50/mo; flag any change that would exceed it.
+- Never hardcode secrets; source them from AWS SSM Parameter Store (SecureString),
+  surfaced into the cluster via IRSA + the External Secrets Operator — the backend is
+  swappable behind ESO. Never commit credentials, kubeconfigs, or `.tfstate`.
 
 ## Commands
 - `just up` / `just down` — provision / tear down.

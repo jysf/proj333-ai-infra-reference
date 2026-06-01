@@ -1,0 +1,11 @@
+# Trivy high-severity allow-list
+#
+# Add one Trivy check ID per line to suppress it in CI scans.
+# Example entry (do NOT add without documentation):
+#   AVD-AWS-0089
+#
+# IMPORTANT: Every entry added here MUST also be documented with a written
+# justification in docs/architecture.md under the section
+# "Trivy high-severity allow-list".
+#
+# This file is currently empty — no checks are suppressed.

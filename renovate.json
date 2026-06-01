@@ -1,0 +1,19 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchManagers": ["helm-values", "helmv3", "helmfile"],
+      "groupName": "helm charts"
+    },
+    {
+      "matchManagers": ["terraform"],
+      "groupName": "iac providers"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions"
+    }
+  ]
+}

@@ -47,3 +47,6 @@ to a seed-stage AI founder, not only to an SRE.
 - formae Pkl under `platform/`.
 - GitOps manifests under `gitops/`; nothing reaches the cluster except through Argo
   once M3 lands.
+- EKS: track the latest EKS-supported Kubernetes version and bump promptly, but verify
+  add-on/chart compatibility (EKS module, AWS LB Controller, Argo, kube-prometheus-stack,
+  OpenCost, GPU operator) in the plan/CI before applying an upgrade.

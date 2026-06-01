@@ -3,7 +3,7 @@
 *.tfstate.*
 *.tflock
 .terraform/
-.terraform.lock.hcl
+# .terraform.lock.hcl is intentionally committed (provider version reproducibility)
 *.tfvars
 *.tfvars.json
 

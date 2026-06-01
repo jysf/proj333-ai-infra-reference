@@ -1,18 +1,28 @@
+aws_profile := env_var_or_default("AWS_PROFILE", "GBFAdministratorAccess-716522590236")
+
 # Show available recipes
 default:
     @just --list
 
-# Provision the substrate + platform (real wiring lands in M1+)
-up:
-    @echo "Will run a plan first, then apply to provision the substrate + platform (M1+)"
+# Provision VPC + EKS substrate. Pass gpu=true to add the GPU node group.
+up gpu="false":
+    @echo "⚠️  This provisions real AWS resources that accrue charges. Teardown with: just down"
+    AWS_PROFILE={{aws_profile}} tofu -chdir=substrate init -input=false
+    AWS_PROFILE={{aws_profile}} tofu -chdir=substrate plan -var gpu={{gpu}}
+    AWS_PROFILE={{aws_profile}} tofu -chdir=substrate apply -auto-approve -var gpu={{gpu}}
+    aws eks update-kubeconfig \
+        --name "$(AWS_PROFILE={{aws_profile}} tofu -chdir=substrate output -raw cluster_name)" \
+        --region "$(AWS_PROFILE={{aws_profile}} tofu -chdir=substrate output -raw region)" \
+        --profile {{aws_profile}}
 
-# Tear down all provisioned cluster resources (M1+)
+# Tear down all substrate resources (state bucket is preserved).
 down:
-    @echo "Will tear down all provisioned cluster resources (M1+)"
+    @echo "Destroying substrate resources. The S3 state bucket is preserved."
+    AWS_PROFILE={{aws_profile}} tofu -chdir=substrate destroy -auto-approve
 
-# Show cluster and workload state (M1+)
+# Show live cluster node state.
 status:
-    @echo "Will show cluster and workload state (M1+)"
+    kubectl get nodes -o wide
 
 # Show current OpenCost / estimated spend (M5)
 cost:
@@ -22,10 +32,11 @@ cost:
 load:
     @echo "Will drive sustained k6 load and save a summary (M4)"
 
-# DRY-RUN preview of changes, mutating nothing. The plan-before-apply sibling of `up`. Maps to `tofu plan` (M1), formae simulate=true (M2), `argocd app diff` (M3) as layers land.
-plan:
-    @echo "Dry-run preview of changes — no changes applied (M1/M2/M3)"
+# DRY-RUN preview of changes — no resources created or modified. Pass gpu=true to preview GPU path.
+plan gpu="false":
+    AWS_PROFILE={{aws_profile}} tofu -chdir=substrate init -input=false
+    AWS_PROFILE={{aws_profile}} tofu -chdir=substrate plan -var gpu={{gpu}}
 
-# Run the M0 acceptance verification harness
+# Run the M0 + M1 acceptance verification harnesses.
 test:
-    @sh scripts/verify-m0.sh
+    @sh scripts/verify-m0.sh && sh scripts/verify-m1.sh

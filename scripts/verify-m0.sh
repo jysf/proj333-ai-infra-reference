@@ -92,15 +92,16 @@ done
 _pass "${DESC}"
 
 # ---------------------------------------------------------------------------
-# Check 5 — Dry-run safety: just plan exits 0 and outputs 'no changes applied'
+# Check 5 — Dry-run convention: `plan` is a no-mutation preview
+# Creds-free static check (M1 wires `plan` to `tofu plan`, which needs AWS
+# creds; M0 used an echo stub). Either form satisfies the convention.
 # ---------------------------------------------------------------------------
-DESC="just plan exits 0 and output contains 'no changes applied'"
-if ! command -v just >/dev/null 2>&1; then
-    _fail "${DESC} — 'just' not found in PATH"
+DESC="justfile 'plan' recipe is a no-mutation dry-run (tofu plan or stub echo)"
+if ! grep -Eq '^plan( |:)' justfile; then
+    _fail "${DESC} — no 'plan' recipe found in justfile"
 fi
-PLAN_OUTPUT="$(just plan 2>&1)" || _fail "${DESC} — 'just plan' exited non-zero"
-if ! printf '%s\n' "${PLAN_OUTPUT}" | grep -qi "no changes applied"; then
-    _fail "${DESC} — output did not contain 'no changes applied'"
+if ! grep -Eq 'tofu .*plan|no changes applied' justfile; then
+    _fail "${DESC} — 'plan' recipe is neither wired to 'tofu plan' nor a no-changes stub"
 fi
 _pass "${DESC}"
 

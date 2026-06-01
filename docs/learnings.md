@@ -42,6 +42,12 @@ feedback loop: a lesson here should change the next milestone's behavior.
 - **Some acceptance scenarios are only verifiable post-push.** The Trivy gate (fail on
   HIGH/CRITICAL) and Renovate's PRs need GitHub (CI / the App). Plan to prove those on the
   milestone PR, not locally.
+- **A local harness can't validate upstream tags.** First CI run failed because the pinned
+  `aquasecurity/trivy-action@0.28.0` doesn't resolve — the real tags are `v`-prefixed
+  (`v0.36.0`). The harness parsed the YAML fine but has no way to know a tag exists on
+  GitHub. Lesson: action/chart version pins are only truly verified once CI resolves them;
+  treat the first green CI run as part of acceptance, and pin to tags copied from the
+  upstream releases page (`gh api repos/<owner>/<repo>/tags`), not from memory.
 
 ### To fold into the process
 - Adopted this learnings log; recording it at Ship is now part of "How we work".

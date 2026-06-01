@@ -22,7 +22,7 @@ Every tool and chart version is pinned at first use and recorded here. Never upg
 | Tool | Version | Pinned at |
 |---|---|---|
 | actions/checkout | v4 | M0 |
-| aquasecurity/trivy-action | 0.28.0 | M0 |
+| aquasecurity/trivy-action | v0.36.0 | M0 |
 
 ## Trivy high-severity allow-list
 

@@ -21,3 +21,22 @@ jobs:
 
       - name: Run M0 acceptance harness
         run: sh scripts/verify-m0.sh
+
+  tofu:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install OpenTofu
+        uses: opentofu/setup-opentofu@v1
+
+      - name: Check formatting
+        run: tofu -chdir=substrate fmt -check -recursive
+
+      - name: Initialize (no backend)
+        run: tofu -chdir=substrate init -backend=false -input=false
+
+      - name: Validate
+        run: tofu -chdir=substrate validate
